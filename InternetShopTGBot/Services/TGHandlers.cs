@@ -271,13 +271,14 @@ namespace InternetShopTGBot.Services
 
                 }
             }
-
+            bool isFlag = false;
             switch (messageText)
             {
                 case "/start":
                 case "/login":
                 case "Війти знову":
                     {
+                        isFlag = true;
                         if (person != null && UserDataStatic.People.Contains(person))
                         {
                             UserDataStatic.People.Remove(person);
@@ -642,6 +643,8 @@ namespace InternetShopTGBot.Services
                     {
                         if (person != null)
                         {
+                            isFlag = true;
+
                             person.Login = "";
                             person.Password = "";
                             person.Token = "";
@@ -651,6 +654,8 @@ namespace InternetShopTGBot.Services
                             {
                             new KeyboardButton[] { "Війти знову" }
                         });
+
+
 
                             await botClient.SendTextMessageAsync(
                                 chatId: chatId,
@@ -672,10 +677,14 @@ namespace InternetShopTGBot.Services
             }
 
 
-            if (person != null)
+            if (person != null || isFlag)
             {
-                int id = UserDataStatic.People.FindIndex(x => x.UserId == person.UserId);
-                UserDataStatic.People[id] = person;
+                if(person != null)
+                {
+                    int id = UserDataStatic.People.FindIndex(x => x.UserId == person.UserId);
+                    UserDataStatic.People[id] = person;
+                    isFlag = false;
+                }
             }
             else
             {
